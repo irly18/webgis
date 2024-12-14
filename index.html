@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Web Qgis Toko Kelontong Mama Rimba </title>
+    <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        #map {
+            height: 600px; /* Tentukan tinggi peta */
+            width: 100%; /* Peta menggunakan lebar penuh */
+        }
+        /* Menyesuaikan gambar dalam popup agar sesuai dengan lebar peta */
+        .popup-content img {
+            max-width: 100%;   /* Gambar mengikuti lebar kontainer popup */
+            height: auto;      /* Menjaga proporsi gambar */
+        }
+        .popup-content {
+            font-size: 14px;
+            max-width: 100%; /* Maksimum lebar popup mengikuti lebar map */
+        }
+        /* Menambahkan styling untuk scrollable daftar barang */
+        .scrollable-items {
+            max-height: 150px; /* Batas tinggi kotak daftar barang */
+            overflow-y: auto;  /* Mengaktifkan scroll jika daftar barang panjang */
+            padding-right: 10px; /* Memberikan padding agar scroll tidak menempel ke kanan */
+            border: 1px solid #ddd; /* Garis batas kotak */
+            margin-top: 10px; /* Memberikan jarak dari elemen sebelumnya */
+        }
+    </style>
+</head>
+<body>
+    <header style="background-color: #333; color: white; padding: 10px 0;">
+        <h1 style="text-align: center;">Online Maps Toko Kelontong Mama Rimba</h1>
+    </header>
+
+    <main>
+        <div id="map"></div>
+    </main>
+
+    <!-- Load Leaflet dan script untuk peta -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Inisialisasi peta dengan koordinat awal dan zoom
+        var map = L.map('map').setView([-6.1239262, 120.464893], 13);
+
+        // Menambahkan Tile Layer menggunakan OpenStreetMap
+        L.tileLayer('https://mt0.google.com/vt/1yrs=s&x={x}&y={y}&z={z}', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fungsi untuk memuat dan menambahkan file GeoJSON ke peta
+        function loadGeoJSON(filePath) {
+            fetch(filePath)
+                .then(response => response.json())
+                .then(data => {
+                    L.geoJSON(data).addTo(map);
+                })
+                .catch(error => console.log('Error loading GeoJSON:', error));
+        }
+
+        // Panggil fungsi untuk memuat beberapa file GeoJSON
+        loadGeoJSON('jalanku.geojson');   
+        loadGeoJSON('kota benteng.geojson'); 
+
+        // Menambahkan GeoJSON Toko
+        var geojsonToko = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "name": "Toko Kelontong {Toko Mama Rimba}",
+                        "rating": 4.5,
+                        "reviews": 30,
+                        "alamat": "JL.Jenderal Ahmad Yani, Sulawesi Selatan",
+                        "image": "toko.jpeg",
+                        "open": "06:00",
+                        "close": "22:00",
+                        "items": [
+                            "1. Mie Instan = Rp 3.000 - Rp 3.500<p>",
+                            "2. Minyak Goreng 1L = Rp 19.000<p>",
+                            "3. Gula Pasir 1L = Rp 17.000<p>",
+                            "4. Beras 1L = Rp 10.500 - Rp 13.000<p>",
+                            "5. Sabun Mandi = Rp 3.000 - Rp 7.000<p>",
+                            "6. Pasta Gigi = Rp 3.000 - Rp 15.000<p>",
+                            "7. Teh Celup = Rp 6.000 - Rp 22.000<p>",
+                            "8. Kopi Sachet = Rp 1.000 - Rp 2.500<p>",
+                            "9. Kopi Bungkus = Rp 22.000 - Rp 32.000<p>",
+                            "10. Terigu 1 Kg = Rp 3.000 - Rp 15.000<p>",
+                            "11. Mentega/BlueBand = Rp 11.000<p>",
+                            "12. Tepung Roti = Rp 9.000<p>",
+                            "13. tissu = Rp 6.000 - Rp 12.000<p>",
+                            "14. Tabung Gas = Rp 26.000<p>",
+                            "15. Galon = Rp 6.000 - Rp 35.000<p>",
+                            "16. Aneka Makanan Ringan = Rp 500 - Rp 7.000<p>",
+                            "17. Aneka Minuman = Rp 5.000 - Rp 11.000<p>",
+                            "18. Aneka Es Krim = Rp 3.000 - Rp 12.000<p>",
+                            "19. Aneka Bumbu Dapur = Rp 1.000 - Rp 7.000<p>",
+                            "20. Aneka Rokok = Rp 9.000 - Rp 40.000<p>",
+                            "21. Aneka Alat Tulis = Rp 2.000 - Rp 10.000<p>",
+                            "22. Roti Dan Kue = Rp 1.000 - Rp 6.000<p>",
+                            "23. Telur 1Btr = Rp 2.000<p>",
+                            "24. Biskuit = Rp 6.000 - Rp 12.000<p>",
+                            "25. Susu Kaleng = Rp 12.000 - Rp 18.000<p>",
+                            "26. Lampu = Rp 7.000 - Rp 115.000<p>",
+                            "27. Sendal = Rp 10.000 - Rp 13.000<p>",
+                            "28. Menjual Juga Aneka Makanan Harian = Rp 2.000 - Rp 15.000",
+                        ]
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [120.464893, -6.1239262]
+                    }
+                }
+            ]
+        };
+        // Fungsi untuk menampilkan popup untuk Toko
+        function onEachToko(feature, layer) {
+            if (feature.properties && feature.properties.name) {
+                var popupContent = `
+                    <div class="popup-content">
+                        <h3>${feature.properties.name}</h3>
+                        <img src="${feature.properties.image}" alt="Toko Image" />
+                        <p><strong>Rating:</strong> ${feature.properties.rating} (${feature.properties.reviews})</p>
+                        <p><strong>Jam Buka:</strong> ${feature.properties.open} - ${feature.properties.close}</p>
+                        <p><strong>Alamat:</strong> ${feature.properties.alamat}</p>
+                        <p><strong>Daftar Barang:</strong></p>
+                        <div class="scrollable-items">
+                        <ul>
+                            ${feature.properties.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                layer.bindPopup(popupContent);
+            }
+        }
+        // Menambahkan GeoJSON Toko ke peta
+        L.geoJSON(geojsonToko, {
+            onEachFeature: onEachToko
+        }).addTo(map);
+    </script>
+</body>
+</html>
